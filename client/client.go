@@ -39,10 +39,10 @@ func NewClient(name string,opts ...options.Option) *Client{
 			transportType := fmt.Sprintf("%v",opt.Value)
 
 			switch transportType  {
-			case "http":
+			case transport.TransportHttp:
 				c.transport = &transport.Http{}
 				c.transport.Init(opt.Children)
-			case "grpc":
+			case transport.TransportGrpc:
 				c.transport = &transport.Grpc{}
 				c.transport.Init(opt.Children)
 			default:

@@ -13,6 +13,8 @@ import (
 	"time"
 )
 
+const TransportHttp = "http"
+
 type Http struct {
 	meta map[string]interface{}
 	api  string
@@ -20,7 +22,7 @@ type Http struct {
 }
 
 func (s *Http) SetMetas(v map[string]interface{}) {
-	panic("implement me")
+	s.meta = v
 }
 
 func (s *Http) Init(opts []options.OptionValue) {
@@ -88,5 +90,5 @@ func (s *Http) Do(serviceName string, params interface{}) (interface{},error) {
 }
 
 func (s *Http) Type() string {
-	return "http"
+	return TransportHttp
 }
