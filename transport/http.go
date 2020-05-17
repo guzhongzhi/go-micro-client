@@ -4,16 +4,19 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/guzhongzhi/go-micro-client/options"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type Http struct {
 	meta map[string]interface{}
 	api  string
+	timeout time.Duration
 }
 
 func (s *Http) SetMetas(v map[string]interface{}) {
@@ -28,6 +31,8 @@ func (s *Http) Init(opts []options.OptionValue) {
 			if !strings.HasSuffix(s.api, "/") {
 				s.api = s.api + "/"
 			}
+		case "timeout":
+			s.timeout = opt.Value.(time.Duration)
 		}
 	}
 }
@@ -58,9 +63,14 @@ func (s *Http) Do(serviceName string, params interface{}) (interface{},error) {
 	if err != nil {
 		return nil,err
 	}
+	for k,v := range s.meta {
+		req.Header.Set(k,fmt.Sprintf("%v",v))
+	}
 	req.Header.Set("Content-type", "application/json")
 
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout:s.timeout,
+	}
 	rsp, err := client.Do(req)
 	if err != nil {
 		return nil,err

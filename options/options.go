@@ -1,5 +1,7 @@
 package options
 
+import "time"
+
 const TransportHttp = "http"
 const TransportGrpc = "grpc"
 
@@ -20,7 +22,7 @@ func NewMetas(v map[string]interface{}) Option {
 	}
 }
 
-func NewHttpTransportOption(apiUrl string) Option {
+func NewHttpTransportOption(apiUrl string,timeout time.Duration) Option {
 	return func() OptionValue {
 		return OptionValue{
 			Name:"transport",
@@ -29,6 +31,10 @@ func NewHttpTransportOption(apiUrl string) Option {
 				OptionValue{
 					Value: apiUrl,
 					Name:  "api",
+				},
+				OptionValue{
+					Value: timeout,
+					Name:  "timeout",
 				},
 			},
 		}
