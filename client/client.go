@@ -18,7 +18,7 @@ func (s *Client) getTrans() transport.Transport{
 }
 
 func (s *Client) Call(serviceName string,params interface{}) interface{} {
-	return s.transport.Do()
+	return s.transport.Do(serviceName,params)
 }
 
 

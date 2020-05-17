@@ -12,8 +12,8 @@ func (s *Grpc) Init(opts []options.OptionValue) {
 
 }
 
-func (s *Grpc) Do() interface{}{
-	return nil
+func (s *Grpc) Do(serviceName string,params interface{}) (interface{},error){
+	return nil,nil
 }
 
 

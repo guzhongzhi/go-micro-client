@@ -8,5 +8,5 @@ type Transport interface {
 	Type() string
 	Init(opts []options.OptionValue)
 	SetMetas(v map[string]interface{})
-	Do() interface{}
+	Do(serviceName string,params interface{}) (interface{},error)
 }
