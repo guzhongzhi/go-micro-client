@@ -8,17 +8,17 @@ import (
 
 type Client struct {
 	name string
-	transport  string
-	trans transport.Transport
+	transport  transport.Transport
+	meta map[string]interface{}
 }
 
 func (s *Client) getTrans() transport.Transport{
 
-	return s.trans
+	return s.transport
 }
 
 func (s *Client) Call(serviceName string,params interface{}) interface{} {
-	return s.trans.Do()
+	return s.transport.Do()
 }
 
 
@@ -33,17 +33,24 @@ func NewClient(name string,opts ...options.Option) *Client{
 		switch opt.Name {
 		case "name":
 			c.name = fmt.Sprintf("%v",opt.Value)
+		case "meta":
+			c.meta = opt.Value.(map[string]interface{})
 		case "transport":
-			c.transport = fmt.Sprintf("%v",opt.Value)
+			transportType := fmt.Sprintf("%v",opt.Value)
+
+			switch transportType  {
+			case "http":
+				c.transport = &transport.Http{}
+				c.transport.Init(opt.Children)
+			case "grpc":
+				c.transport = &transport.Grpc{}
+				c.transport.Init(opt.Children)
+			default:
+				panic("invalid transport")
+			}
 		}
 	}
-	switch c.transport  {
-	case "http":
-		c.trans = &transport.Http{}
-		c.trans.Init(c)
-	case "grpc":
-		c.trans = &transport.Grpc{}
-		c.trans.Init(c)
-	}
+	c.transport.SetMetas(c.meta)
+
 	return c
 }
